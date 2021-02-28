@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abae4e45bff2e62489858720e4d0df93, type: 3}
+  m_Name: GranadeExplosion
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 0}
+  toPlay: {fileID: 11400000, guid: f0d727ee06737314fa8877825bdf9762, type: 2}
+  playOneShot: {fileID: 11400000, guid: a4b5ada932e82e14c855a1f4be9d659c, type: 2}
