@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e21b4bc08b2c6904fb4402c8918af6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  granadeSpeed: 1000
+  granadeSpeed: 1500
   explosionForce: 2000
   explosionRadius: 10
   explosionEffect: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56, type: 3}

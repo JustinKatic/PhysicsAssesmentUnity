@@ -10,6 +10,7 @@ public class PlayerMove : MonoBehaviour
 
     public GameObject groundedObj;
     public LayerMask ground;
+    public LayerMask ignorelayermask;
     private Rigidbody rb;
     Animator anim;
 
@@ -38,7 +39,7 @@ public class PlayerMove : MonoBehaviour
     {
         Ray ray = new Ray(groundedObj.transform.position, Vector3.down);
         RaycastHit hitInfo;
-        if (Physics.Raycast(ray, out hitInfo, 1f,ground))
+        if (Physics.Raycast(ray, out hitInfo, 1f,ground | ignorelayermask))
         {
             return hitInfo.collider != null;
         }
