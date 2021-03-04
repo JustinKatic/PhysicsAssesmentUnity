@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: GranadeExplosion
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 0}
+  - {fileID: 8300000, guid: dfe47f1a3a4238d49b574365fc134d5d, type: 3}
   toPlay: {fileID: 11400000, guid: f0d727ee06737314fa8877825bdf9762, type: 2}
   playOneShot: {fileID: 11400000, guid: a4b5ada932e82e14c855a1f4be9d659c, type: 2}

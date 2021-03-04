@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ShootSound
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 8300000, guid: d60d93f86fd66be4b9d94343d78b74c6, type: 3}
+  - {fileID: 8300000, guid: bea38e31eb5774f4dbd20b949a83d3e5, type: 3}
   toPlay: {fileID: 11400000, guid: f0d727ee06737314fa8877825bdf9762, type: 2}
   playOneShot: {fileID: 11400000, guid: a4b5ada932e82e14c855a1f4be9d659c, type: 2}

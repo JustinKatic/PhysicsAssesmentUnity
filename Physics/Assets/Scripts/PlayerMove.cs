@@ -7,6 +7,9 @@ public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed;
     public float jumpForce;
+
+    public GameObject groundedObj;
+    public LayerMask ground;
     private Rigidbody rb;
     Animator anim;
 
@@ -25,7 +28,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Jump()
     {
-        if(CanJump())
+        if (CanJump())
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
@@ -33,9 +36,9 @@ public class PlayerMove : MonoBehaviour
 
     bool CanJump()
     {
-        Ray ray = new Ray(transform.position, Vector3.down);
+        Ray ray = new Ray(groundedObj.transform.position, Vector3.down);
         RaycastHit hitInfo;
-        if(Physics.Raycast(ray,out hitInfo,0.5f))
+        if (Physics.Raycast(ray, out hitInfo, 1f,ground))
         {
             return hitInfo.collider != null;
         }
