@@ -7,11 +7,15 @@ public class PlayerMove : MonoBehaviour
 {
     public float moveSpeed;
     public float jumpForce;
+    public bool isJumping;
+    public bool isGrounded;
 
     public GameObject groundedObj;
     public LayerMask ground;
+    public float groundRayDist;
     public LayerMask ignorelayermask;
     private Rigidbody rb;
+
     Animator anim;
 
     private void Start()
@@ -23,27 +27,48 @@ public class PlayerMove : MonoBehaviour
     {
         Move();
 
+        isGrounded = IsGrounded();
+
+        if (isJumping && isGrounded)
+        {
+            anim.SetBool("IsJumping", false);
+            isJumping = false;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
             Jump();
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            anim.SetBool("IsAiming", true);
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            anim.SetBool("IsAiming", false);
+        }
+    }
+
+    bool IsGrounded()
+    {
+        Ray ray = new Ray(groundedObj.transform.position, Vector3.down);
+        
+        if (Physics.Raycast(ray, groundRayDist, ground))
+        {
+            //Debug.Log("GROUNDED");
+            Debug.DrawRay(groundedObj.transform.position, Vector3.down * groundRayDist, Color.red);
+            return true;
+        }
+        return false;
     }
 
     private void Jump()
     {
-        if (CanJump())
+        if (isGrounded)
         {
+            anim.SetBool("IsJumping", true);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isJumping = true;
         }
-    }
-
-    bool CanJump()
-    {
-        Ray ray = new Ray(groundedObj.transform.position, Vector3.down);
-        RaycastHit hitInfo;
-        if (Physics.Raycast(ray, out hitInfo, 1f,ground | ignorelayermask))
-        {
-            return hitInfo.collider != null;
-        }
-        return false;
     }
 
     void Move()
@@ -57,9 +82,8 @@ public class PlayerMove : MonoBehaviour
 
         rb.velocity = dir;
 
-        if (dir != Vector3.zero)
-            anim.speed = 1;
-        else
-            anim.speed = 0;
+        anim.SetFloat("xPos", x);
+        anim.SetFloat("yPos", z);
+
     }
 }

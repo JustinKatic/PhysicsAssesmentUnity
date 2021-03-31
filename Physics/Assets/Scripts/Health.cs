@@ -8,6 +8,13 @@ public class Health : MonoBehaviour
 {
     [SerializeField] private int startingHealth = 1;
     public int currentHealth;
+    [SerializeField] FloatVariable numberOfActiveEnemies;
+    [SerializeField] GameObject hitVFX;
+    [SerializeField] GameObject hitVFXSpawnPoint;
+
+    private bool isAlive = true;
+
+
 
     private void Start()
     {
@@ -22,14 +29,20 @@ public class Health : MonoBehaviour
     {
         currentHealth -= damageAmount;
 
-        if (currentHealth <= 0)
+        GameObject hitVFX = ObjectPooler.SharedInstance.GetPooledObject("Blood");
+        hitVFX.transform.position = hitVFXSpawnPoint.transform.position;
+        hitVFX.SetActive(true);
+
+        if (currentHealth <= 0 && isAlive)
             Die();
     }
 
     private void Die()
     {
+        isAlive = false;
+        numberOfActiveEnemies.RuntimeValue -= 1;
         gameObject.GetComponent<NavMeshAgent>().enabled = false;
-        Ragdoll();
+        Ragdoll(true);
         Invoke("DestroyEnemy", 4f);
     }
 
@@ -38,14 +51,12 @@ public class Health : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void Ragdoll()
+    void Ragdoll(bool ToggleRagdol)
     {
+        Ragdoll r = gameObject.GetComponentInParent<Ragdoll>();
+        if (r != null)
         {
-            Ragdoll r = gameObject.GetComponentInParent<Ragdoll>();
-            if (r != null)
-            {
-                r.ragdollOn = true;
-            }
+            r.ragdollOn = ToggleRagdol;
         }
     }
 }

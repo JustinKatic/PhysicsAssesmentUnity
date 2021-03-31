@@ -4,10 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - LeftHand
-  - Battery
+  - EnemyBot
+  - SpawnPoints
   - FxTemporaire
-  - WeightPlate
   layers:
   - Default
   - TransparentFX
@@ -17,8 +16,8 @@ TagManager:
   - UI
   - 
   - 
-  - BoundryWall
-  - IgnoreBoundryWall
+  - 
+  - 
   - Ground
   - 
   - 

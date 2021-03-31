@@ -11,17 +11,9 @@ public class Gun : MonoBehaviour
 
     private float granadeTimer;
 
-
-    public float force = 5f;
-
-    public float pickUpRange;
-
     public GameObject shootPoint;
 
     public GameObject granadeShootPoint;
-
-
-    public LineRenderer lr;
 
     public float hitForce = 500;
 
@@ -34,26 +26,26 @@ public class Gun : MonoBehaviour
     public ScriptableSoundObj gunShot;
 
 
-    private void Start()
-    {
-        lr.material.color = Color.red;
-    }
     void Update()
     {
+
         gunTimer += Time.deltaTime;
         if (gunTimer >= fireRate)
         {
             if (Input.GetButton("Fire1"))
             {
                 gunTimer = 0f;
+                shootEffect.SetActive(true);
                 fireGun();
             }
+            else
+                shootEffect.SetActive(false);
         }
 
         granadeTimer += Time.deltaTime;
         if (granadeTimer >= fireRate)
         {
-            if (Input.GetButton("Fire2"))
+            if (Input.GetKeyDown(KeyCode.G))
             {
                 granadeTimer = 0f;
                 fireGranade();
@@ -66,22 +58,18 @@ public class Gun : MonoBehaviour
         Instantiate(granade, granadeShootPoint.transform.position, granadeShootPoint.transform.rotation);
     }
 
-
     private void fireGun()
     {
-
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
+
+
+        gunShot.Play();
 
         Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 2f);
         RaycastHit hitInfo;
 
-
-
-        lr.SetPosition(0, shootPoint.transform.position);
         if (Physics.Raycast(ray, out hitInfo, 200f, ~layersToIgnore))
         {
-            lr.SetPosition(1, hitInfo.point);
-            StartCoroutine(ShotEffect());
 
             Health health = hitInfo.transform.gameObject.GetComponentInParent<Health>();
 
@@ -101,27 +89,6 @@ public class Gun : MonoBehaviour
             }
             if (hitInfo.rigidbody != null)
                 hitInfo.rigidbody.AddForce(-hitInfo.normal * hitForce);
-
-
-            if (hitInfo.transform.gameObject.name == "PowerBox")
-                hitInfo.transform.gameObject.GetComponent<PowerBox>().SpawnBattery();
-
-
-            if (hitInfo.transform.gameObject.name == "Battery")
-                if (hitInfo.distance <= pickUpRange)
-                {
-                    hitInfo.transform.gameObject.GetComponent<Battery>().AttachItemToPlayer();
-                }
         }
-    }
-    IEnumerator ShotEffect()
-    {
-        gunShot.Play();
-        lr.enabled = true;
-        shootEffect.SetActive(true);
-        yield return new WaitForSeconds(0.2f);
-        lr.enabled = false;
-        shootEffect.SetActive(false);
-
     }
 }
