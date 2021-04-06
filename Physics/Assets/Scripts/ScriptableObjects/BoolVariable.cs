@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
-public class BoolVariable : ScriptableObject
+public class BoolVariable : ScriptableObject, ISerializationCallbackReceiver
 {
 #if UNITY_EDITOR
     [Multiline]
@@ -12,13 +12,20 @@ public class BoolVariable : ScriptableObject
 
     public bool Value;
 
+    public bool RuntimeValue;
+
     public void SetValue(bool newBool)
     {
         Value = newBool;
     }
 
-    public void SetValue(BoolVariable newBool)
+    public void OnAfterDeserialize()
     {
-        Value = newBool.Value;
+        RuntimeValue = Value;
+    }
+
+    public void OnBeforeSerialize()
+    {
+
     }
 }

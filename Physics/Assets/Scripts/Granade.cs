@@ -1,19 +1,26 @@
-﻿using System.Collections;
+﻿/************************************************************************************************************************
+ *Name: Justin Katic  
+ *Description: Granade projectile behaviour handles when granade explodes after thrown aswell as its interaction with other
+ *objects. casts a sphere cast after x seconds and applying dmg if a health exists and forces to objects without the ignoreLayer
+ *layer.
+ *Date Modified: 06/04/2021
+ ************************************************************************************************************************/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Granade : MonoBehaviour
 {
     Rigidbody rb;
-    public float granadeSpeed = 500f;
-    public float explosionForce = 2000;
-    public float explosionRadius = 30;
+    public float m_granadeSpeed = 500f;
+    public float m_explosionForce = 2000;
+    public float m_explosionRadius = 30;
 
-    public GameObject explosionEffect;
+    public GameObject m_explosionEffect;
 
-    public LayerMask IgnoreLayer;
+    public LayerMask m_ignoreLayer;
 
-    public ScriptableSoundObj granadeExplosion;
+    public ScriptableSoundObj m_granadeExplosion;
 
 
 
@@ -21,7 +28,7 @@ public class Granade : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.AddForce(gameObject.transform.forward * granadeSpeed);
+        rb.AddForce(gameObject.transform.forward * m_granadeSpeed);
         StartCoroutine(Explode());
         
     }
@@ -30,21 +37,21 @@ public class Granade : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        granadeExplosion.Play();
+        m_granadeExplosion.Play();
 
-        Instantiate(explosionEffect, transform.position,explosionEffect.transform.rotation);
+        Instantiate(m_explosionEffect, transform.position, m_explosionEffect.transform.rotation);
 
-       Collider[] objectsHit = Physics.OverlapSphere(transform.position, explosionRadius, ~IgnoreLayer);
+       Collider[] objectsHit = Physics.OverlapSphere(transform.position, m_explosionRadius, ~m_ignoreLayer);
         {
             for (int i = 0; i < objectsHit.Length; i++)
             {
                   if(objectsHit[i].gameObject.GetComponent<Rigidbody>() != null)
                 {
-                    if(objectsHit[i].transform.gameObject.GetComponentInParent<Health>() != null)
+                    if(objectsHit[i].transform.gameObject.GetComponentInParent<EnemyHealth>() != null)
                     {
-                        objectsHit[i].transform.gameObject.GetComponentInParent<Health>().TakeDamage(50);
+                        objectsHit[i].transform.gameObject.GetComponentInParent<EnemyHealth>().TakeDamage(50);
                     }
-                    objectsHit[i].gameObject.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, transform.position, 100);
+                    objectsHit[i].gameObject.GetComponent<Rigidbody>().AddExplosionForce(m_explosionForce, transform.position, 100);
                 }
             }
             gameObject.SetActive(false);

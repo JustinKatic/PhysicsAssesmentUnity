@@ -1,38 +1,42 @@
-﻿using System;
+﻿/************************************************************************************************************************
+ *Name: Justin Katic  
+ *Description: handles player inputs for movement and jump aswell as movement animations for the player.
+ *Date Modified: 06/04/2021
+ ************************************************************************************************************************/
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float moveSpeed;
-    public float jumpForce;
-    public bool isJumping;
-    public bool isGrounded;
+    public float m_moveSpeed;
+    public float m_jumpForce;
+    public bool m_isJumping;
+    public bool m_isGrounded;
 
-    public GameObject groundedObj;
-    public LayerMask ground;
-    public float groundRayDist;
-    public LayerMask ignorelayermask;
-    private Rigidbody rb;
+    public GameObject m_groundedObj;
+    public LayerMask m_ground;
+    public float m_groundRayDist;
+    private Rigidbody m_rb;
 
-    Animator anim;
+    Animator m_anim;
 
     private void Start()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
-        anim = gameObject.GetComponentInChildren<Animator>();
+        m_rb = gameObject.GetComponent<Rigidbody>();
+        m_anim = gameObject.GetComponentInChildren<Animator>();
     }
     private void Update()
     {
         Move();
 
-        isGrounded = IsGrounded();
+        m_isGrounded = IsGrounded();
 
-        if (isJumping && isGrounded)
+        if (m_isJumping && m_isGrounded)
         {
-            anim.SetBool("IsJumping", false);
-            isJumping = false;
+            m_anim.SetBool("IsJumping", false);
+            m_isJumping = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -40,22 +44,21 @@ public class PlayerMove : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            anim.SetBool("IsAiming", true);
+            m_anim.SetBool("IsAiming", true);
         }
         if (Input.GetMouseButtonUp(1))
         {
-            anim.SetBool("IsAiming", false);
+            m_anim.SetBool("IsAiming", false);
         }
     }
 
     bool IsGrounded()
     {
-        Ray ray = new Ray(groundedObj.transform.position, Vector3.down);
+        Ray ray = new Ray(m_groundedObj.transform.position, Vector3.down);
         
-        if (Physics.Raycast(ray, groundRayDist, ground))
+        if (Physics.Raycast(ray, m_groundRayDist, m_ground))
         {
-            //Debug.Log("GROUNDED");
-            Debug.DrawRay(groundedObj.transform.position, Vector3.down * groundRayDist, Color.red);
+            Debug.DrawRay(m_groundedObj.transform.position, Vector3.down * m_groundRayDist, Color.red);
             return true;
         }
         return false;
@@ -63,11 +66,11 @@ public class PlayerMove : MonoBehaviour
 
     private void Jump()
     {
-        if (isGrounded)
+        if (m_isGrounded)
         {
-            anim.SetBool("IsJumping", true);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isJumping = true;
+            m_anim.SetBool("IsJumping", true);
+            m_rb.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
+            m_isJumping = true;
         }
     }
 
@@ -77,13 +80,13 @@ public class PlayerMove : MonoBehaviour
         float z = Input.GetAxis("Vertical");
 
         Vector3 dir = transform.right * x + transform.forward * z;
-        dir *= moveSpeed;
-        dir.y = rb.velocity.y;
+        dir *= m_moveSpeed;
+        dir.y = m_rb.velocity.y;
 
-        rb.velocity = dir;
+        m_rb.velocity = dir;
 
-        anim.SetFloat("xPos", x);
-        anim.SetFloat("yPos", z);
+        m_anim.SetFloat("xPos", x);
+        m_anim.SetFloat("yPos", z);
 
     }
 }

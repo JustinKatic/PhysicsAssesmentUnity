@@ -1,15 +1,22 @@
-﻿using System.Collections;
+﻿/************************************************************************************************************************
+ *Name: Justin Katic  
+ *Description: handles enemies projectiles translates the projectile forward each frame.
+ *Date Modified: 06/04/2021
+ ************************************************************************************************************************/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    [SerializeField] float _speed;
-    Rigidbody rb = null;
+    [SerializeField] protected float m_speed;
+    [SerializeField] protected float m_bulletLife;
+    [SerializeField] protected float m_damage;
 
-    private void Start()
+
+    private void OnEnable()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
+        Invoke("SetUnActive", m_bulletLife);
     }
 
     void Update()
@@ -18,9 +25,24 @@ public class ProjectileController : MonoBehaviour
         MoveBullet();
     }
 
-    void MoveBullet()
+    virtual protected void MoveBullet()
     {
-        rb.velocity = new Vector3(0, 0, _speed);
+        transform.Translate(Vector3.forward * m_speed * Time.deltaTime);
     }
 
+    virtual protected void SetUnActive()
+    {
+        gameObject.SetActive(false);
+        CancelInvoke();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<PlayerHealth>().Hurt(m_damage);
+            gameObject.SetActive(false);
+            CancelInvoke();
+        }
+    }
 }

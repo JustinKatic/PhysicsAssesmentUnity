@@ -1,53 +1,61 @@
-﻿using System;
+﻿/************************************************************************************************************************
+ *Name: Justin Katic  
+ *Description: Handles players shooting and throwing granades.
+ *Shoot- If timers are greater then fire rate player can shoot raycast if target has health apply damage.
+ *granade- If timers are greater then fire rate player can spawn granade. grande script will handle its movement.
+ *Date Modified: 06/04/2021
+ ************************************************************************************************************************/
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class Gun : MonoBehaviour
 {
-    [SerializeField] [Range(0f, 1.5f)] private float fireRate = 1;
-    [SerializeField] [Range(1, 10)] private int damage = 1;
+    [SerializeField] [Range(0f, 1.5f)] private float m_fireRate = 1;
+    [SerializeField] [Range(1, 10)] private int m_damage = 1;
 
-    private float gunTimer;
+    private float m_gunTimer;
 
-    private float granadeTimer;
+    private float m_granadeTimer;
 
-    public GameObject shootPoint;
+    public GameObject m_shootPoint;
 
-    public GameObject granadeShootPoint;
+    public GameObject m_granadeShootPoint;
 
-    public float hitForce = 500;
+    public float m_hitForce = 500;
 
-    public LayerMask layersToIgnore;
+    public LayerMask m_layersToIgnore;
 
-    public GameObject shootEffect;
+    public GameObject m_shootEffect;
 
-    public GameObject granade;
+    public GameObject m_granade;
 
-    public ScriptableSoundObj gunShot;
+    public ScriptableSoundObj m_gunShot;
 
 
     void Update()
     {
 
-        gunTimer += Time.deltaTime;
-        if (gunTimer >= fireRate)
+        m_gunTimer += Time.deltaTime;
+        if (m_gunTimer >= m_fireRate)
         {
             if (Input.GetButton("Fire1"))
             {
-                gunTimer = 0f;
-                shootEffect.SetActive(true);
+                m_gunTimer = 0f;
+                m_shootEffect.SetActive(true);
                 fireGun();
             }
             else
-                shootEffect.SetActive(false);
+                m_shootEffect.SetActive(false);
         }
 
-        granadeTimer += Time.deltaTime;
-        if (granadeTimer >= fireRate)
+        m_granadeTimer += Time.deltaTime;
+        if (m_granadeTimer >= m_fireRate)
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                granadeTimer = 0f;
+                m_granadeTimer = 0f;
                 fireGranade();
             }
         }
@@ -55,7 +63,7 @@ public class Gun : MonoBehaviour
 
     private void fireGranade()
     {
-        Instantiate(granade, granadeShootPoint.transform.position, granadeShootPoint.transform.rotation);
+        Instantiate(m_granade, m_granadeShootPoint.transform.position, m_granadeShootPoint.transform.rotation);
     }
 
     private void fireGun()
@@ -63,15 +71,15 @@ public class Gun : MonoBehaviour
         Ray ray = Camera.main.ViewportPointToRay(Vector3.one * 0.5f);
 
 
-        gunShot.Play();
+        m_gunShot.Play();
 
         Debug.DrawRay(ray.origin, ray.direction * 100, Color.red, 2f);
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(ray, out hitInfo, 200f, ~layersToIgnore))
+        if (Physics.Raycast(ray, out hitInfo, 200f, ~m_layersToIgnore))
         {
 
-            Health health = hitInfo.transform.gameObject.GetComponentInParent<Health>();
+            EnemyHealth health = hitInfo.transform.gameObject.GetComponentInParent<EnemyHealth>();
 
             if (health != null)
             {
@@ -79,16 +87,16 @@ public class Gun : MonoBehaviour
                 {
                     Ragdoll ragdoll = hitInfo.transform.gameObject.GetComponentInParent<Ragdoll>();
 
-                    ragdoll.rigidbodies.RemoveAt(ragdoll.rigidbodies.Count - 1);
+                    ragdoll.m_rigidbodies.RemoveAt(ragdoll.m_rigidbodies.Count - 1);
                     Destroy(hitInfo.transform.gameObject.GetComponent<CharacterJoint>());
                     hitInfo.transform.gameObject.GetComponent<Rigidbody>().isKinematic = false;
                     health.TakeDamage(50);
                 }
 
-                health.TakeDamage(damage);
+                health.TakeDamage(m_damage);
             }
             if (hitInfo.rigidbody != null)
-                hitInfo.rigidbody.AddForce(-hitInfo.normal * hitForce);
+                hitInfo.rigidbody.AddForce(-hitInfo.normal * m_hitForce);
         }
     }
 }

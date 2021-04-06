@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5358111206390600952}
   - component: {fileID: 530955726}
   - component: {fileID: 901555756199300405}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Granade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,14 +109,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e21b4bc08b2c6904fb4402c8918af6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  granadeSpeed: 1000
-  explosionForce: 2000
-  explosionRadius: 10
-  explosionEffect: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56, type: 3}
-  IgnoreLayer:
+  m_granadeSpeed: 1000
+  m_explosionForce: 2000
+  m_explosionRadius: 30
+  m_explosionEffect: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56, type: 3}
+  m_ignoreLayer:
     serializedVersion: 2
     m_Bits: 4
-  granadeExplosion: {fileID: 11400000, guid: ac6fe08262fd88a46a337a2ca1cd3468, type: 2}
+  m_granadeExplosion: {fileID: 11400000, guid: ac6fe08262fd88a46a337a2ca1cd3468, type: 2}
 --- !u!54 &901555756199300405
 Rigidbody:
   m_ObjectHideFlags: 0

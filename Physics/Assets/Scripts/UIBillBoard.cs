@@ -1,19 +1,24 @@
-﻿using System.Collections;
+﻿/************************************************************************************************************************
+ *Name: Justin Katic  
+ *Description: causes ui elements to look towards the cam so we can always see sprite front on.
+ *Date Modified: 06/04/2021
+ ************************************************************************************************************************/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UIBillBoard : MonoBehaviour
 {
-    Transform cam;
+    Transform m_cam;
 
     void Awake()
     {
-        cam = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        m_cam = GameObject.FindGameObjectWithTag("MainCamera").transform;
     }
 
 
     void LateUpdate()
     {
-        transform.LookAt(transform.position + cam.forward);
+        transform.LookAt(transform.position + m_cam.forward);
     }
 }

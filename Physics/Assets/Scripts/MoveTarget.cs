@@ -1,40 +1,46 @@
-﻿using System.Collections;
+﻿/************************************************************************************************************************
+ *Name: Justin Katic  
+ *Description: moves a target obj the player is looking at used for giving player a obj to look at asif its aiming
+ *towards somthing with its animations
+ *Date Modified: 06/04/2021
+ ************************************************************************************************************************/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveTarget : MonoBehaviour
 {
-    public GameObject target;
+    public GameObject m_target;
 
-    public float _CheckDistance = 100f;
-    public float lerpTime;
-    public RaycastHit _Hit;
+    public float m_checkDistance = 100f;
+    public float m_lerpTime;
+    public RaycastHit m_hit;
 
-    Vector3 oldTargetPos;
+    Vector3 m_oldTargetPos;
 
-    Camera cam;
+    Camera m_cam;
 
     private void Start()
     {
-        cam = Camera.main;
+        m_cam = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
-        oldTargetPos = target.transform.position;
+        m_oldTargetPos = m_target.transform.position;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = m_cam.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out _Hit, _CheckDistance))
+        if (Physics.Raycast(ray, out m_hit, m_checkDistance))
         {
-            target.transform.position = Vector3.Lerp(oldTargetPos, _Hit.point, lerpTime * Time.deltaTime);
+            m_target.transform.position = Vector3.Lerp(m_oldTargetPos, m_hit.point, m_lerpTime * Time.deltaTime);
         }
 
         else
         {
-            Physics.Raycast(ray, _CheckDistance);
-            target.transform.position = Vector3.Lerp(oldTargetPos, ray.GetPoint(_CheckDistance), lerpTime * Time.deltaTime);
+            Physics.Raycast(ray, m_checkDistance);
+            m_target.transform.position = Vector3.Lerp(m_oldTargetPos, ray.GetPoint(m_checkDistance), m_lerpTime * Time.deltaTime);
         }
     }
 }

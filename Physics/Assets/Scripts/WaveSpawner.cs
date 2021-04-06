@@ -1,3 +1,9 @@
+/************************************************************************************************************************
+ *Name: Justin Katic  
+ *Description: spawns enemies until all enemies in wave are spawned. wave last till all enemy count is 0 and then next 
+ *wave will begin spawning repeating till no waves are left triggering the allWavesCompleted event.
+ *Date Modified: 06/04/2021
+ ************************************************************************************************************************/
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
@@ -13,33 +19,32 @@ public class WaveSpawner : MonoBehaviour
     [System.Serializable]
     public class Wave
     {
-        public string name;
-        public Transform[] enemy;
-        public float rate;
+        public string m_name;
+        public Transform[] m_enemy;
+        public float m_rate;
     }
 
-    [SerializeField] IntVariable nextWaveNum;
+    [SerializeField] IntVariable m_nextWaveNum;
 
     [Header("WAVE DETAILS")]
-    [SerializeField] Wave[] waves;
-    private int _currentEnemy = 0;
-    private float searchCountdown = 1f;
+    [SerializeField] Wave[] m_waves;
+    private int m_currentEnemy = 0;
+    private float m_searchCountdown = 1f;
 
-    [SerializeField] float timeBetweenWaves = 5f;
-    private float waveCountdown;
+    [SerializeField] float m_timeBetweenWaves = 5f;
+    private float m_waveCountdown;
 
-    [SerializeField] FloatVariable NumberOfActiveEnemies;
+    [SerializeField] FloatVariable m_numberOfActiveEnemies;
 
     [Header("EVENTS")]
-    [SerializeField] GameEvent WaveCompletedEvent;
-    [SerializeField] GameEvent AllWavesCompleted;
+    [SerializeField] GameEvent m_waveCompletedEvent;
+    [SerializeField] GameEvent m_allWavesCompleted;
 
 
     [Header("UI TEXT")]
-    [SerializeField] TextMeshProUGUI waveCounterTxt;
-    [SerializeField] TextMeshProUGUI currentWaveTxt;
+    [SerializeField] TextMeshProUGUI m_waveCounterTxt;
+    [SerializeField] TextMeshProUGUI m_currentWaveTxt;
 
-    [SerializeField] GameObject enemy;
 
 
 
@@ -49,8 +54,8 @@ public class WaveSpawner : MonoBehaviour
 
     void Start()
     {
-        currentWaveTxt.text = waves[nextWaveNum.RuntimeValue].name;
-        waveCountdown = timeBetweenWaves;
+        m_currentWaveTxt.text = m_waves[m_nextWaveNum.RuntimeValue].m_name;
+        m_waveCountdown = m_timeBetweenWaves;
     }
 
     void Update()
@@ -59,7 +64,7 @@ public class WaveSpawner : MonoBehaviour
         {
             if (StartNextWave())
             {
-                _currentEnemy = 0;
+                m_currentEnemy = 0;
                 WaveCompleted();
             }
             else
@@ -68,19 +73,19 @@ public class WaveSpawner : MonoBehaviour
             }
         }
 
-        if (waveCountdown <= 0)
+        if (m_waveCountdown <= 0)
         {
             if (State != SpawnState.SPAWNING)
             {
-                waveCounterTxt.text = string.Empty;
-                StartCoroutine(SpawnWave(waves[nextWaveNum.RuntimeValue]));
+                m_waveCounterTxt.text = string.Empty;
+                StartCoroutine(SpawnWave(m_waves[m_nextWaveNum.RuntimeValue]));
             }
         }
 
         else
         {
-            waveCountdown -= Time.deltaTime;
-            waveCounterTxt.text = Mathf.Round(waveCountdown).ToString();
+            m_waveCountdown -= Time.deltaTime;
+            m_waveCounterTxt.text = Mathf.Round(m_waveCountdown).ToString();
         }
     }
 
@@ -88,29 +93,29 @@ public class WaveSpawner : MonoBehaviour
     void WaveCompleted()
     {
         State = SpawnState.COUNTING;
-        waveCountdown = timeBetweenWaves;
+        m_waveCountdown = m_timeBetweenWaves;
 
 
-        if (nextWaveNum.RuntimeValue + 1 == waves.Length)
+        if (m_nextWaveNum.RuntimeValue + 1 == m_waves.Length)
         {
-            AllWavesCompleted.Raise();
+            m_allWavesCompleted.Raise();
         }
         else
         {
-            nextWaveNum.RuntimeValue++;
-            currentWaveTxt.text = waves[nextWaveNum.RuntimeValue].name;
-            WaveCompletedEvent.Raise();
+            m_nextWaveNum.RuntimeValue++;
+            m_currentWaveTxt.text = m_waves[m_nextWaveNum.RuntimeValue].m_name;
+            m_waveCompletedEvent.Raise();
         }
     }
 
     bool StartNextWave()
     {
-        searchCountdown -= Time.deltaTime;
-        if (searchCountdown <= 0f)
+        m_searchCountdown -= Time.deltaTime;
+        if (m_searchCountdown <= 0f)
         {
-            searchCountdown = 1f;
+            m_searchCountdown = 1f;
 
-            if (NumberOfActiveEnemies.RuntimeValue <= 0)
+            if (m_numberOfActiveEnemies.RuntimeValue <= 0)
             {
                 return true;
             }
@@ -122,10 +127,10 @@ public class WaveSpawner : MonoBehaviour
     {
         State = SpawnState.SPAWNING;
 
-        for (int i = 0; i < _wave.enemy.Length; i++)
+        for (int i = 0; i < _wave.m_enemy.Length; i++)
         {
-            SpawnEnemy(_wave.enemy[i]);
-            yield return new WaitForSeconds(_wave.rate);
+            SpawnEnemy(_wave.m_enemy[i]);
+            yield return new WaitForSeconds(_wave.m_rate);
         }
 
         State = SpawnState.WAITING;
@@ -133,19 +138,19 @@ public class WaveSpawner : MonoBehaviour
         yield break;
     }
 
-    void SpawnEnemy(Transform _enemy)
+    void SpawnEnemy(Transform a_enemy)
     {
         GameObject[] spawnPoints;
         spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoints");
         int randSpawnPoint = Random.Range(0, spawnPoints.Length - 1);
         Transform _sp = spawnPoints[randSpawnPoint].transform;
 
-        Instantiate(enemy, _sp.transform.position, _sp.transform.rotation);
-        NumberOfActiveEnemies.RuntimeValue += 1;
+        Instantiate(a_enemy, _sp.transform.position, _sp.transform.rotation);
+        m_numberOfActiveEnemies.RuntimeValue += 1;
 
-        _currentEnemy++;
-        if (_currentEnemy >= spawnPoints.Length)
-            _currentEnemy = 0;
+        m_currentEnemy++;
+        if (m_currentEnemy >= spawnPoints.Length)
+            m_currentEnemy = 0;
     }
 
 
